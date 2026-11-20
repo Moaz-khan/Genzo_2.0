@@ -1,0 +1,10 @@
+{
+  "description": "Shop premium silver jewellery for men and women, with curated collections, secure checkout, flexible Pakistani payment options, and convenient order tracking.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

@@ -1,0 +1,995 @@
+{
+  "info": {
+    "_postman_id": "genzo-silver-api-v1",
+    "name": "GENZO SILVER API",
+    "description": "Complete API collection for GENZO SILVER Store backend. Base URL: http://localhost:5000\n\n**Setup:**\n1. Import this collection\n2. Import `GENZO_SILVER.postman_environment.json`\n3. Select the environment in Postman\n4. Run `Auth / User Login` or `Auth / Admin Login` — tokens auto-save\n5. All other requests use `{{token}}` / `{{admin_token}}` automatically\n\n**Server:** `npm run server` (port 5000)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000/api/v1"
+    }
+  ],
+  "item": [
+
+    {
+      "name": "🏥 Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/health",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "health"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "🔐 Auth",
+      "item": [
+        {
+          "name": "Signup",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const res = pm.response.json();",
+                  "  if (res.data && res.data.token) {",
+                  "    pm.environment.set('token', res.data.token);",
+                  "    console.log('Token saved:', res.data.token.substring(0,20) + '...');",
+                  "  }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Test User\",\n  \"email\": \"testuser@example.com\",\n  \"password\": \"Test@1234\",\n  \"phone\": \"+923001234567\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/signup",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "signup"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "User Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const res = pm.response.json();",
+                  "  if (res.data && res.data.token) {",
+                  "    pm.environment.set('token', res.data.token);",
+                  "    console.log('User token saved!');",
+                  "  }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"testuser@example.com\",\n  \"password\": \"Test@1234\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Admin Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const res = pm.response.json();",
+                  "  if (res.data && res.data.token) {",
+                  "    pm.environment.set('admin_token', res.data.token);",
+                  "    console.log('Admin token saved!');",
+                  "  }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"rohan@genzopk.com\",\n  \"password\": \"Rohan0313\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "me"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update My Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Updated Name\",\n  \"phone\": \"+923009876543\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "me"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "📦 Products",
+      "item": [
+        {
+          "name": "Get All Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products?page=1&limit=12",
+              "host": ["{{base_url}}"],
+              "path": ["products"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "12" },
+                { "key": "category", "value": "", "disabled": true },
+                { "key": "types", "value": "ring,bracelet", "disabled": true },
+                { "key": "finishes", "value": "polished", "disabled": true },
+                { "key": "minPrice", "value": "1000", "disabled": true },
+                { "key": "maxPrice", "value": "50000", "disabled": true },
+                { "key": "badge", "value": "New", "disabled": true },
+                { "key": "inStockOnly", "value": "true", "disabled": true },
+                { "key": "search", "value": "silver", "disabled": true },
+                { "key": "sortBy", "value": "newest", "disabled": true }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Products - With Filters",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products?types=ring&inStockOnly=true&sortBy=price_asc&limit=6",
+              "host": ["{{base_url}}"],
+              "path": ["products"],
+              "query": [
+                { "key": "types", "value": "ring" },
+                { "key": "inStockOnly", "value": "true" },
+                { "key": "sortBy", "value": "price_asc" },
+                { "key": "limit", "value": "6" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Products - Search",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products?search=silver&page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["products"],
+              "query": [
+                { "key": "search", "value": "silver" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Featured Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products/featured",
+              "host": ["{{base_url}}"],
+              "path": ["products", "featured"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Filter Facets",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products/facets",
+              "host": ["{{base_url}}"],
+              "path": ["products", "facets"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const res = pm.response.json();",
+                  "  if (res.data && res.data.id) {",
+                  "    pm.environment.set('product_id', res.data.id);",
+                  "  }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products/{{product_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["products", "{{product_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product by Slug",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products/silver-leaf-ring",
+              "host": ["{{base_url}}"],
+              "path": ["products", "silver-leaf-ring"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "🛒 Cart",
+      "item": [
+        {
+          "name": "Get Cart (Guest)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-session-id", "value": "{{session_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/cart",
+              "host": ["{{base_url}}"],
+              "path": ["cart"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Cart (Logged In)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/cart",
+              "host": ["{{base_url}}"],
+              "path": ["cart"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add to Cart (Guest)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "  const res = pm.response.json();",
+                  "  if (res.data && res.data.cartItemId) {",
+                  "    pm.environment.set('cart_item_id', res.data.cartItemId);",
+                  "    console.log('Cart item ID saved:', res.data.cartItemId);",
+                  "  }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "x-session-id", "value": "{{session_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": {{product_id}},\n  \"size\": \"M\",\n  \"quantity\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cart",
+              "host": ["{{base_url}}"],
+              "path": ["cart"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Cart Item Quantity",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "x-session-id", "value": "{{session_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"delta\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cart/{{cart_item_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["cart", "{{cart_item_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Set Cart Item Quantity (Exact)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "x-session-id", "value": "{{session_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 3\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cart/{{cart_item_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["cart", "{{cart_item_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Cart Item",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "x-session-id", "value": "{{session_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/cart/{{cart_item_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["cart", "{{cart_item_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Clear Entire Cart",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "x-session-id", "value": "{{session_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/cart",
+              "host": ["{{base_url}}"],
+              "path": ["cart"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "❤️ Wishlist",
+      "item": [
+        {
+          "name": "Get Wishlist (Guest)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-session-id", "value": "{{session_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/wishlist",
+              "host": ["{{base_url}}"],
+              "path": ["wishlist"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Wishlist (Logged In)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/wishlist",
+              "host": ["{{base_url}}"],
+              "path": ["wishlist"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Toggle Wishlist (Add/Remove)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "x-session-id", "value": "{{session_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": {{product_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/wishlist/toggle",
+              "host": ["{{base_url}}"],
+              "path": ["wishlist", "toggle"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "📋 Orders",
+      "item": [
+        {
+          "name": "Create Order (Checkout)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const res = pm.response.json();",
+                  "  if (res.data) {",
+                  "    pm.environment.set('order_id', res.data.orderId || '');",
+                  "    pm.environment.set('order_number', res.data.orderNumber || '');",
+                  "    console.log('Order created:', res.data.orderNumber);",
+                  "  }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerName\": \"Test Customer\",\n  \"customerEmail\": \"test@example.com\",\n  \"customerPhone\": \"+923001234567\",\n  \"shippingAddress\": {\n    \"street\": \"123 Main Street\",\n    \"city\": \"Karachi\",\n    \"province\": \"Sindh\",\n    \"postalCode\": \"75000\",\n    \"country\": \"Pakistan\"\n  },\n  \"paymentMethod\": \"jazzcash\",\n  \"items\": [\n    {\n      \"productId\": 1,\n      \"size\": \"M\",\n      \"quantity\": 1,\n      \"price\": 4500\n    }\n  ],\n  \"subtotal\": 4500,\n  \"shippingFee\": 450,\n  \"totalAmount\": 4950,\n  \"notes\": \"Please gift wrap\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/orders",
+              "host": ["{{base_url}}"],
+              "path": ["orders"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Order (Guest)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const res = pm.response.json();",
+                  "  if (res.data) {",
+                  "    pm.environment.set('order_id', res.data.orderId || '');",
+                  "    pm.environment.set('order_number', res.data.orderNumber || '');",
+                  "    console.log('Guest order created:', res.data.orderNumber);",
+                  "  }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "x-session-id", "value": "{{session_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerName\": \"Guest Customer\",\n  \"customerEmail\": \"guest@example.com\",\n  \"customerPhone\": \"+923009999999\",\n  \"shippingAddress\": {\n    \"street\": \"456 Guest Lane\",\n    \"city\": \"Lahore\",\n    \"province\": \"Punjab\",\n    \"postalCode\": \"54000\",\n    \"country\": \"Pakistan\"\n  },\n  \"paymentMethod\": \"bank\",\n  \"items\": [\n    {\n      \"productId\": 1,\n      \"size\": \"S\",\n      \"quantity\": 2,\n      \"price\": 4500\n    }\n  ],\n  \"subtotal\": 9000,\n  \"shippingFee\": 450,\n  \"totalAmount\": 9450\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/orders",
+              "host": ["{{base_url}}"],
+              "path": ["orders"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Payment Receipt",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "receipt",
+                  "type": "file",
+                  "src": "",
+                  "description": "Payment receipt image (PNG/JPG/PDF, max 5MB)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/orders/{{order_id}}/receipt",
+              "host": ["{{base_url}}"],
+              "path": ["orders", "{{order_id}}", "receipt"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Track Order (by order number + phone)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/orders/track?orderNumber={{order_number}}&phone=+923001234567",
+              "host": ["{{base_url}}"],
+              "path": ["orders", "track"],
+              "query": [
+                { "key": "orderNumber", "value": "{{order_number}}" },
+                { "key": "phone", "value": "+923001234567" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "My Orders (Logged In)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/orders/my-orders",
+              "host": ["{{base_url}}"],
+              "path": ["orders", "my-orders"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "📰 Newsletter",
+      "item": [
+        {
+          "name": "Subscribe to Newsletter",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"newsletter@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/newsletter/subscribe",
+              "host": ["{{base_url}}"],
+              "path": ["newsletter", "subscribe"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "📞 Contact",
+      "item": [
+        {
+          "name": "Get Store Settings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/contact/settings",
+              "host": ["{{base_url}}"],
+              "path": ["contact", "settings"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Submit Inquiry",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"phone\": \"+923001234567\",\n  \"subject\": \"Custom Order Inquiry\",\n  \"message\": \"I would like to inquire about a custom silver bracelet.\",\n  \"channel\": \"website\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/contact/inquiry",
+              "host": ["{{base_url}}"],
+              "path": ["contact", "inquiry"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "🔑 Admin Panel",
+      "description": "All admin routes require: Authorization: Bearer {{admin_token}}\nGet admin_token by running 'Admin Login' in the Auth folder first.",
+      "item": [
+        {
+          "name": "Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/stats",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "stats"]
+            }
+          },
+          "response": []
+        },
+
+        {
+          "name": "Orders — Get All Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/orders",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "orders"],
+              "query": [
+                { "key": "status", "value": "", "disabled": true },
+                { "key": "search", "value": "", "disabled": true },
+                { "key": "page", "value": "1", "disabled": true },
+                { "key": "limit", "value": "20", "disabled": true }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Orders — Filter by Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/orders?status=pending",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "orders"],
+              "query": [
+                { "key": "status", "value": "pending" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Orders — Update Order Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderStatus\": \"processing\",\n  \"paymentStatus\": \"paid\",\n  \"trackingCode\": \"TRK-2026-001\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/orders/{{order_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "orders", "{{order_id}}"]
+            }
+          },
+          "response": []
+        },
+
+        {
+          "name": "Products — Get All (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/products",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "products"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Products — Create Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Silver Ring\",\n  \"slug\": \"new-silver-ring\",\n  \"description\": \"A beautiful new silver ring\",\n  \"price\": 5500,\n  \"originalPrice\": 7000,\n  \"badge\": \"New\",\n  \"inStock\": true,\n  \"categoryId\": 1,\n  \"images\": [\n    { \"imageUrl\": \"https://example.com/ring.jpg\", \"altText\": \"Silver Ring\", \"isPrimary\": true }\n  ],\n  \"sizes\": [\"S\", \"M\", \"L\"],\n  \"types\": [\"ring\"],\n  \"finishes\": [\"polished\"],\n  \"accordions\": [\n    { \"title\": \"Material\", \"content\": \"925 Sterling Silver\" }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/products",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "products"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Products — Update Product",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Silver Ring\",\n  \"price\": 6000,\n  \"inStock\": true,\n  \"badge\": \"Sale\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/products/{{product_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "products", "{{product_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Products — Toggle Stock",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/products/{{product_id}}/toggle-stock",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "products", "{{product_id}}", "toggle-stock"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Products — Delete Product",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/products/{{product_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "products", "{{product_id}}"]
+            }
+          },
+          "response": []
+        },
+
+        {
+          "name": "Customers — Get All Customers",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/customers",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "customers"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Newsletter — Get All Subscribers",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/subscribers",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "subscribers"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Inquiries — Get All Inquiries",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/inquiries",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "inquiries"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Inquiries — Update Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"resolved\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/inquiries/1",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "inquiries", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Settings — Get Store Settings",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/settings",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "settings"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Settings — Update Store Settings",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"freeShippingThreshold\": 25000,\n  \"shippingFee\": 450,\n  \"announcementBar\": \"Free shipping on orders over PKR 25,000!\",\n  \"studioName\": \"GENZO SILVER\",\n  \"studioEmail\": \"hello@genzopk.com\",\n  \"studioPhone\": \"+923001234567\",\n  \"studioAddress\": \"Karachi, Pakistan\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/settings",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "settings"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+
+  ]
+}
