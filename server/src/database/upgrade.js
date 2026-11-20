@@ -13,11 +13,11 @@ async function runUpgrade() {
   console.log('--- Upgrading TiDB Database for GENZO SILVER ---');
 
   const connection = await mysql.createConnection({
-    host: process.env.DB_HOST || 'gateway01.ap-northeast-1.prod.aws.tidbcloud.com',
+    host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT) || 4000,
-    user: process.env.DB_USER || '44i85yZnWWhMnDD.root',
-    password: process.env.DB_PASSWORD || 'oJPkHKIlK3FO69y2',
-    database: process.env.DB_NAME || 'genzo_silver',
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
     ssl: {
       minVersion: 'TLSv1.2',
       rejectUnauthorized: true,

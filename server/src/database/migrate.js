@@ -17,10 +17,10 @@ async function runMigration() {
   let initConn;
   try {
     initConn = await mysql.createConnection({
-      host: process.env.DB_HOST || 'gateway01.ap-northeast-1.prod.aws.tidbcloud.com',
+      host: process.env.DB_HOST,
       port: Number(process.env.DB_PORT) || 4000,
-      user: process.env.DB_USER || '44i85yZnWWhMnDD.root',
-      password: process.env.DB_PASSWORD || 'oJPkHKIlK3FO69y2',
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
       ssl: {
         minVersion: 'TLSv1.2',
         rejectUnauthorized: true,
@@ -28,7 +28,7 @@ async function runMigration() {
       connectTimeout: 60000,
     });
 
-    const targetDb = process.env.DB_NAME || 'genzo_silver';
+    const targetDb = process.env.DB_NAME;
     await initConn.query(
       `CREATE DATABASE IF NOT EXISTS \`${targetDb}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`
     );
@@ -40,11 +40,11 @@ async function runMigration() {
   }
 
   const connection = await mysql.createConnection({
-    host: process.env.DB_HOST || 'gateway01.ap-northeast-1.prod.aws.tidbcloud.com',
+    host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT) || 4000,
-    user: process.env.DB_USER || '44i85yZnWWhMnDD.root',
-    password: process.env.DB_PASSWORD || 'oJPkHKIlK3FO69y2',
-    database: process.env.DB_NAME || 'genzo_silver',
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
     ssl: {
       minVersion: 'TLSv1.2',
       rejectUnauthorized: true,

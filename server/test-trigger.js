@@ -1,13 +1,19 @@
 import mysql from 'mysql2/promise';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 async function testSingleAdminConstraint() {
   try {
     const conn = await mysql.createConnection({
-      host: 'gateway01.ap-northeast-1.prod.aws.tidbcloud.com',
-      port: 4000,
-      user: '44i85yZnWWhMnDD.root',
-      password: 'oJPkHKIlK3FO69y2',
-      database: 'genzo_silver',
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT) || 4000,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
       ssl: { minVersion: 'TLSv1.2', rejectUnauthorized: true },
       connectTimeout: 60000,
     });

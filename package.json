@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "format": "oxfmt",
+    "start": "node server/server.js",
     "server": "node server/server.js",
     "db:migrate": "node server/src/database/migrate.js",
     "db:seed": "node server/src/database/seed.js",

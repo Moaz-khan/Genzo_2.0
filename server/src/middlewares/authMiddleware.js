@@ -17,7 +17,7 @@ export const verifyToken = async (req, res, next) => {
   }
 
   try {
-    const secret = process.env.JWT_SECRET || 'genzo_silver_jwt_secret_key_2026_super_secure_token';
+    const secret = process.env.JWT_SECRET;
     const decoded = jwt.verify(token, secret);
 
     const [rows] = await pool.query(
@@ -69,7 +69,7 @@ export const optionalAuth = async (req, res, next) => {
   }
 
   try {
-    const secret = process.env.JWT_SECRET || 'genzo_silver_jwt_secret_key_2026_super_secure_token';
+    const secret = process.env.JWT_SECRET;
     const decoded = jwt.verify(token, secret);
     const [rows] = await pool.query(
       'SELECT id, full_name, email, phone, role FROM users WHERE id = ?',

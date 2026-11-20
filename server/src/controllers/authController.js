@@ -4,7 +4,7 @@ import crypto from 'crypto';
 import pool from '../config/db.js';
 
 const generateToken = (userId, email, role) => {
-  const secret = process.env.JWT_SECRET || 'genzo_silver_jwt_secret_key_2026_super_secure_token';
+  const secret = process.env.JWT_SECRET;
   const expiresIn = process.env.JWT_EXPIRES_IN || '7d';
   return jwt.sign({ id: userId, email, role }, secret, { expiresIn });
 };

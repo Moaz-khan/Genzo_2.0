@@ -10,6 +10,10 @@ const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 dotenv.config();
 
+if (!process.env.JWT_SECRET) {
+  throw new Error('Missing required environment variable: JWT_SECRET');
+}
+
 const PORT = process.env.PORT || 5000;
 
 async function checkDatabaseConnection(retries = 3, delayMs = 3000) {
@@ -47,7 +51,7 @@ async function startServer() {
     console.log(`  Environment: ${process.env.NODE_ENV || 'development'}`);
     console.log(`  Listening on: http://localhost:${PORT}`);
     console.log(`  API Base URL: http://localhost:${PORT}/api/v1`);
-    console.log(`  Health Check: http://localhost:${PORT}/api/health`);
+    console.log(`  Health Check: http://localhost:${PORT}/health`);
     console.log(`  Database Status: ${isDbConnected ? 'CONNECTED (TiDB Cloud)' : 'PENDING CONNECTION'}`);
     console.log(`===============================================`);
   });

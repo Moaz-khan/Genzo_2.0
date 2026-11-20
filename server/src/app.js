@@ -33,7 +33,7 @@ app.use('/uploads', express.static(serverUploadsPath));
 app.use('/uploads', express.static(rootUploadsPath));
 
 // Health Check Endpoint
-app.get('/api/health', (req, res) => {
+app.get(['/health', '/api/health'], (req, res) => {
   res.json({
     status: 'healthy',
     service: 'GENZO SILVER API',
